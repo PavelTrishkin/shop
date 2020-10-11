@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>User List</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div th:replace="~{navigation :: navigation(Users)}"/>
+        <h1>All Users</h1>
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <td>Имя</td>
+                <td>Email</td>
+                <td sec:authorize="hasAuthority('ADMIN')">Операции</td>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr th:each="user : ${users}">
+                <td th:text="${user.username}"></td>
+                <td td th:text="${user.email}"></td>
+                <td sec:authorize="hasAuthority('ADMIN')">
+                    <a>Редактировать</a>
+                    <a>/</a>
+                    <a>Удалить</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
