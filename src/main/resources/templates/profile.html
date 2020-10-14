@@ -10,7 +10,7 @@
 </head>
 <body>
     <div class="container">
-        <div th:replace="~{navigation :: navigation(Users)}" />
+        <div th:replace="~{navigation :: navigation(Profile)}" />
         <h1>User profile</h1>
         <form th:action="@{/users/profile}" th:object="${user}" method="post">
             <table border="1">

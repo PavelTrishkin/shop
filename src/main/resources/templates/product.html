@@ -43,7 +43,7 @@
             <td sec:authorize="hasAnyAuthority('CLIENT')"><a th:href="@{/products/{id}/bucket(id=${p.id})}">Добавить в корзину</a></td>
             <td sec:authorize="hasAnyAuthority('ADMIN','MANAGER')"><a th:href="@{'/products/edit/' + ${p.id}}">Редактировать</a>
                 <a>/</a>
-                <a>Удалить</a>
+                <a th:href="@{'/products/delete/' + ${p.id}}">Удалить</a>
             </td>
         </tr>
         </tbody>

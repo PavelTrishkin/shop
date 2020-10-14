@@ -1,8 +1,10 @@
 package ru.gb.trishkin.shop.service;
 
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import ru.gb.trishkin.shop.dao.ProductRepository;
 import ru.gb.trishkin.shop.domain.Bucket;
+import ru.gb.trishkin.shop.domain.Product;
 import ru.gb.trishkin.shop.domain.User;
 import ru.gb.trishkin.shop.dto.ProductDto;
 import ru.gb.trishkin.shop.mapper.ProductMapper;
@@ -48,5 +50,30 @@ public class ProductServiceImpl implements ProductService {
         else {
             bucketService.addProducts(bucket, Collections.singletonList(productId));
         }
+    }
+
+    @Override
+    @Transactional
+    public void save(ProductDto productDto) {
+        productRepository.save(mapper.toProduct(productDto));
+    }
+
+//    @Override
+//    @Transactional
+//    public Product findById(Long id){
+//        return productRepository.findById(id).orElse(null);
+//    }
+
+
+    @Override
+    @Transactional
+    public ProductDto findById(Long id) {
+        return mapper.fromProduct(productRepository.findById(id).orElse(null));
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        productRepository.deleteById(id);
     }
 }
