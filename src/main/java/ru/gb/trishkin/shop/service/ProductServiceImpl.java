@@ -49,6 +49,7 @@ public class ProductServiceImpl implements ProductService {
         }
         else {
             bucketService.addProducts(bucket, Collections.singletonList(productId));
+//            bucketService.test(bucketService.getBucketByUser(username));
         }
     }
 
