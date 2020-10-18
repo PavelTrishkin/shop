@@ -20,19 +20,35 @@
                     <a class="nav-link" th:href="@{'/'}" th:text="Главная"></a>
                 </li>
                 <li class="nav-item" th:classappend="${activeTab == 'Market' ? 'active' : ''}">
-                    <a class="nav-link" th:href="@{'/products'}" th:text="Продукты"></a>
+                    <div class="dropdown" style="margin-left: 10px;">
+                        <button class="btn btn-outline-settcondary dropdown-toggle" th:text="Продукты" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" />
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item"  th:href="@{'/products'}">Список продуктов</a>
+                            <a sec:authorize="hasAnyAuthority('ADMIN','MANAGER')" class="dropdown-item"  th:href="@{'/products/new'}">Добавить продукт</a>
+                        </div>
+                    </div>
                 </li>
                 <li sec:authorize="hasAnyAuthority('ADMIN','MANAGER')" class="nav-item" th:classappend="${activeTab == 'Users' ? 'active' : ''}">
-                    <a class="nav-link" th:href="@{'/users'}" th:text="Пользователи"></a>
+                    <div class="dropdown" style="margin-left: 10px;">
+                        <button class="btn btn-outline-settcondary dropdown-toggle" th:text="Пользователи" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" />
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item"  th:href="@{'/users'}">Список пользователей</a>
+                            <a sec:authorize="hasAuthority('ADMIN')" class="dropdown-item"  th:href="@{'/users/new'}">Добавить нового пользователя</a>
+                        </div>
+                    </div>
                 </li>
                 <li sec:authorize="isAuthenticated()" class="nav-item" th:classappend="${activeTab == 'Bucket' ? 'active' : ''}">
                     <a class="nav-link" th:href="@{'/bucket'}" th:text="Корзина"></a>
                 </li>
+                <li style="margin-right: auto" sec:authorize="isAuthenticated()" class="nav-item" th:classappend="${activeTab == 'Profile' ? 'active' : ''}">
+                    <a class="nav-link" th:href="@{/users/profile}"><span sec:authentication="principal.username">Bob</span></a>
+                </li>
                 <li sec:authorize="isAuthenticated()" class="nav-item">
-                    <form th:action="@{/logout}" method="POST">
+                    <form th:align="right" th:action="@{/logout}" method="POST">
                         <button id="navLogout" class="btn btn-outline-secondary" type="submit"  th:text="Выйти"></button>
                     </form>
                 </li>
+
 
                 <li sec:authorize="isAnonymous()" class="nav-item">
                     <form class="align-middle" th:action="@{/auth}" method="post">
