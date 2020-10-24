@@ -1,0 +1,12 @@
+server:
+  port: 8888
+spring:
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/PavelTrishkin/cloud-config.git
+          search-paths: cloud-config/step01
+          clone-on-start: true
+  application:
+    name: config_server
