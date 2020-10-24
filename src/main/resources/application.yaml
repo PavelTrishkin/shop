@@ -12,3 +12,8 @@ spring:
   thymeleaf:
     encoding: UTF-8
 
+  application:
+    name: shop
+  cloud:
+    config:
+      uri: http://localhost:8888
