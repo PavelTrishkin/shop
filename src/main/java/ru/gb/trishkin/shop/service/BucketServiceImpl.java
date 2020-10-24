@@ -1,5 +1,6 @@
 package ru.gb.trishkin.shop.service;
 
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import ru.gb.trishkin.shop.dao.BucketRepository;
 import ru.gb.trishkin.shop.dao.ProductRepository;
@@ -8,6 +9,7 @@ import ru.gb.trishkin.shop.domain.Product;
 import ru.gb.trishkin.shop.domain.User;
 import ru.gb.trishkin.shop.dto.BucketDetailDto;
 import ru.gb.trishkin.shop.dto.BucketDto;
+import ru.gb.trishkin.shop.dto.ProductDto;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -22,11 +24,13 @@ public class BucketServiceImpl implements BucketService {
     private final BucketRepository bucketRepository;
     private final ProductRepository productRepository;
     private final UserService userService;
+    private final SimpMessagingTemplate template;
 
-    public BucketServiceImpl(BucketRepository bucketRepository, ProductRepository productRepository, UserService userService) {
+    public BucketServiceImpl(BucketRepository bucketRepository, ProductRepository productRepository, UserService userService, SimpMessagingTemplate template) {
         this.bucketRepository = bucketRepository;
         this.productRepository = productRepository;
         this.userService = userService;
+        this.template = template;
     }
 
     @Override
@@ -53,6 +57,8 @@ public class BucketServiceImpl implements BucketService {
         newProductsList.addAll(getCollectRefProductsByIds(productIds));
         bucket.setProducts(newProductsList);
         bucketRepository.save(bucket);
+        BucketDto bucketDto = getBucketByUser(bucket.getUser().getName());
+        template.convertAndSend("/topic/bucket", bucketDto);
     }
 
     @Override
@@ -82,4 +88,8 @@ public class BucketServiceImpl implements BucketService {
 
         return bucketDto;
     }
+
+//    public void test(BucketDto dto){
+//        template.convertAndSend("/topic/bucket", dto);
+//    }
 }
