@@ -14,7 +14,6 @@ public class ShopApplication {
 		PasswordEncoder encoder = context.getBean(PasswordEncoder.class);
 		System.out.println("Encode password 'admin': " + encoder.encode("admin"));
 		System.out.println("Encode password 'pass': " + encoder.encode("pass"));
-
 	}
 
 }
