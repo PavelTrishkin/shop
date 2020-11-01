@@ -13,7 +13,7 @@ public interface BucketService {
 
     void addProducts(Bucket bucket, List<Long> productIds);
 
-//    void test(BucketDto dto);
-
     BucketDto getBucketByUser(String name);
+
+    void commitBucketToOrder(String username);
 }

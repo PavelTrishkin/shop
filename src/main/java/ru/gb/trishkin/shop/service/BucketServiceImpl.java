@@ -1,17 +1,20 @@
 package ru.gb.trishkin.shop.service;
 
+import org.springframework.integration.channel.DirectChannel;
+import org.springframework.integration.support.MessageBuilder;
+import org.springframework.messaging.Message;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import ru.gb.trishkin.shop.config.SellIntegrationConfig;
 import ru.gb.trishkin.shop.dao.BucketRepository;
 import ru.gb.trishkin.shop.dao.ProductRepository;
-import ru.gb.trishkin.shop.domain.Bucket;
-import ru.gb.trishkin.shop.domain.Product;
-import ru.gb.trishkin.shop.domain.User;
+import ru.gb.trishkin.shop.domain.*;
 import ru.gb.trishkin.shop.dto.BucketDetailDto;
 import ru.gb.trishkin.shop.dto.BucketDto;
-import ru.gb.trishkin.shop.dto.ProductDto;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,12 +28,53 @@ public class BucketServiceImpl implements BucketService {
     private final ProductRepository productRepository;
     private final UserService userService;
     private final SimpMessagingTemplate template;
+    private final OrderService orderService;
+    private final SellIntegrationConfig config;
 
-    public BucketServiceImpl(BucketRepository bucketRepository, ProductRepository productRepository, UserService userService, SimpMessagingTemplate template) {
+    public BucketServiceImpl(BucketRepository bucketRepository, ProductRepository productRepository, UserService userService, SimpMessagingTemplate template, OrderService orderService, SellIntegrationConfig config) {
         this.bucketRepository = bucketRepository;
         this.productRepository = productRepository;
         this.userService = userService;
         this.template = template;
+        this.orderService = orderService;
+        this.config = config;
+    }
+
+    @Override
+    @Transactional
+    public void commitBucketToOrder(String username) {
+        User user = userService.findByName(username);
+        if (user == null){
+            throw new RuntimeException("User not found!");
+        }
+        Bucket bucket = user.getBucket();
+        if (bucket == null || bucket.getProducts().isEmpty()){
+            return;
+        }
+
+        Order order = new Order();
+        order.setOrderStatus(OrderStatus.NEW);
+        order.setUser(user);
+
+        Map<Product, Long> productWithAmount = bucket.getProducts().stream()
+                .collect(Collectors.groupingBy(product -> product, Collectors.counting()));
+
+        List<OrderDetails> orderDetails = productWithAmount.entrySet().stream()
+                .map(pair -> new OrderDetails(order, pair.getKey(), pair.getValue()))
+                .collect(Collectors.toList());
+
+        BigDecimal total = new BigDecimal(orderDetails.stream()
+                .map(detail -> detail.getPrice().multiply(detail.getAmount()))
+                .mapToDouble(BigDecimal::doubleValue).sum());
+
+        order.setOrderDetails(orderDetails);
+        order.setSum(total);
+        order.setAddress("none");
+
+        orderService.saveOrder(order);
+        createAndSendSellList(orderDetails, order, config.getSellsChannel());
+        bucket.getProducts().clear();
+        bucketRepository.save(bucket);
     }
 
     @Override
@@ -89,7 +133,20 @@ public class BucketServiceImpl implements BucketService {
         return bucketDto;
     }
 
-//    public void test(BucketDto dto){
-//        template.convertAndSend("/topic/bucket", dto);
-//    }
+    //Создание и отправка списка продаж
+    public void createAndSendSellList(List<OrderDetails> orderDetails, Order order, DirectChannel channel){
+        SellsList sellsList = new SellsList();
+        List<Sell> sells = new ArrayList<>();
+
+        for (OrderDetails o : orderDetails) {
+            sells.add(new Sell(LocalDateTime.now(),order.getId(),order.getUser().getName(), o.getProduct().getTitle(), o.getAmount().longValue(), o.getAmount().multiply(o.getPrice())));
+        }
+        sellsList.setSell(sells);
+        Message<SellsList> message = MessageBuilder.
+                withPayload(sellsList)
+                .setHeader("Content-type", "application/json")
+                .build();
+        channel.send(message);
+        System.out.println("Sell list: " + message);
+    }
 }

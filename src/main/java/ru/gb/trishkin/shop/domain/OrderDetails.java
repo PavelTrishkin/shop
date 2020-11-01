@@ -29,5 +29,12 @@ public class OrderDetails {
     @JoinColumn(name = "product_id")
     private Product product;
     private BigDecimal amount;
-    private Double price;
+    private BigDecimal price;
+
+    public OrderDetails(Order order, Product product, Long amount) {
+        this.order = order;
+        this.product = product;
+        this.amount = new BigDecimal(amount);
+        this.price = new BigDecimal(product.getPrice());
+    }
 }

@@ -4,6 +4,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import ru.gb.trishkin.shop.dto.BucketDto;
 import ru.gb.trishkin.shop.service.BucketService;
 
@@ -30,5 +31,13 @@ public class BucketController {
         }
 
         return "bucket";
+    }
+
+    @PostMapping("/bucket")
+    public String commitBucket(Model model, Principal principal){
+        if (principal != null){
+            bucketService.commitBucketToOrder(principal.getName());
+        }
+        return "redirect:/bucket";
     }
 }
