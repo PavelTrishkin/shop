@@ -1,115 +1,114 @@
 -- USERS
-CREATE TABLE user_seq (next_val bigint);
-INSERT INTO user_seq VALUES ( 1 );
-CREATE TABLE users (
-    id bigint not null,
-    archive bit not null,
-    email varchar(255),
-    name varchar(255),
-    password varchar(255),
-    role varchar(255),
-    bucket_id bigint,
-    primary key (id)
-);
+create sequence user_seq start 1 increment 1;
 
+create table users (
+  id int8 not null,
+  archive boolean not null,
+  email varchar(255),
+  name varchar(255),
+  password varchar(255),
+  role varchar(255),
+  bucket_id int8,
+  primary key (id)
+);
 -- BUCKET
-CREATE TABLE bucket_seq (next_val bigint);
-INSERT INTO bucket_seq VALUES ( 1 );
-CREATE TABLE buckets (
-    id bigint not null,
-    user_id bigint,
-    primary key (id)
+create sequence bucket_seq start 1 increment 1;
+
+create table buckets (
+  id int8 not null,
+  user_id int8,
+  primary key (id)
 );
 
 -- LINK BETWEEN BUCKET AND USER
-ALTER TABLE buckets
-    ADD CONSTRAINT foreign key (user_id)
-    REFERENCES users (id);
-ALTER TABLE users
-    ADD CONSTRAINT foreign key (bucket_id)
-    REFERENCES buckets (id);
+alter table if exists buckets
+  add constraint buckets_fk_user
+  foreign key (user_id) references users;
+
+alter table if exists users
+  add constraint users_fk_bucket
+  foreign key (bucket_id) references buckets;
 
 -- CATEGORY
-CREATE TABLE category_seq (next_val bigint);
-INSERT INTO category_seq VALUES ( 1 );
-CREATE TABLE categories (
-    id bigint not null,
-    title varchar(255),
-    primary key (id)
-);
+create sequence category_seq start 1 increment 1;
 
+create table categories (
+  id int8 not null,
+  title varchar(255),
+  primary key (id)
+);
 -- PRODUCTS
-CREATE TABLE product_seq (next_val bigint);
-INSERT INTO product_seq VALUES ( 1 );
-CREATE TABLE products (
-    id bigint not null,
-    price double precision,
-    title varchar(255),
-    primary key (id)
+create sequence product_seq start 1 increment 1;
+
+create table products (
+  id int8 not null,
+  price float8,
+  title varchar(255),
+  primary key (id)
 );
 
 -- CATEGORY AND PRODUCT
-CREATE TABLE products_categories (
-    product_id bigint not null,
-    category_id bigint not null
+create table products_categories (
+  product_id int8 not null,
+  category_id int8 not null
 );
-ALTER TABLE products_categories
-    ADD CONSTRAINT foreign key (category_id)
-    REFERENCES categories (id);
-ALTER TABLE products_categories
-    ADD CONSTRAINT foreign key (product_id)
-    REFERENCES products (id);
+
+alter table if exists products_categories
+  add constraint products_categories_fk_category
+  foreign key (category_id) references categories;
+
+alter table if exists products_categories
+  add constraint products_categories_fk_product
+  foreign key (product_id) references products;
 
 -- PRODUCTS IN BUCKET
-CREATE TABLE bucket_products (
-    bucket_id bigint not null,
-    product_id bigint not null
+create table bucket_products (
+  bucket_id int8 not null,
+  product_id int8 not null
 );
-ALTER TABLE bucket_products
-    ADD CONSTRAINT foreign key (product_id)
-    REFERENCES products (id);
-ALTER TABLE bucket_products
-    ADD CONSTRAINT foreign key (bucket_id)
-    REFERENCES buckets (id);
+
+alter table if exists bucket_products
+  add constraint bucket_products_fk_product
+  foreign key (product_id) references products;
+
+alter table if exists bucket_products
+  add constraint bucket_products_fk_bucket
+  foreign key (bucket_id) references buckets;
 
 -- ORDERS
-CREATE TABLE order_seq (next_val bigint);
-INSERT INTO order_seq VALUES ( 1 );
-CREATE TABLE orders (
-    id bigint not null,
-    address varchar(255),
-    created datetime NULL,
-    updated datetime NULL,
-    order_status varchar(255),
-    sum decimal(19,2),
-    user_id bigint,
-    primary key (id)
+create sequence order_seq start 1 increment 1;
+
+create table orders (
+  id int8 not null,
+  address varchar(255),
+  changed timestamp,
+  created timestamp,
+  status varchar(255),
+  sum numeric(19, 2),
+  user_id int8,
+  primary key (id)
 );
 
-ALTER TABLE orders
-    ADD CONSTRAINT foreign key (user_id)
-    REFERENCES users (id);
+alter table if exists orders
+  add constraint orders_fk_user
+  foreign key (user_id) references users;
 
 -- DETAILS OF ORDER
-CREATE TABLE order_details_seq (next_val bigint);
-INSERT INTO order_details_seq VALUES ( 1 );
-CREATE TABLE order_details (
-    id bigint not null,
-    amount decimal(19,2),
-    price double precision,
-    order_id bigint,
-    product_id bigint,
-    primary key (id)
+create sequence order_details_seq start 1 increment 1;
+
+create table orders_details (
+  id int8 not null,
+  order_id int8 not null,
+  product_id int8 not null,
+  amount numeric(19, 2),
+  price numeric(19, 2),
+  primary key (id)
 );
-CREATE TABLE orders_order_details (
-    order_id bigint not null,
-    order_details_id bigint not null
-);
-ALTER TABLE orders_order_details
-    ADD CONSTRAINT UNIQUE (order_details_id);
-ALTER TABLE order_details
-    ADD CONSTRAINT foreign key (order_id)
-    REFERENCES orders (id);
-ALTER TABLE order_details
-    ADD CONSTRAINT foreign key (product_id)
-    REFERENCES products (id);
+
+alter table if exists orders_details
+  add constraint orders_details_fk_order
+  foreign key (order_id) references orders;
+
+alter table if exists orders_details
+  add constraint orders_details_fk_product
+  foreign key (product_id) references products;
