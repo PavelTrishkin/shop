@@ -1,23 +1,21 @@
 -- USERS
 create sequence user_seq start 1 increment 1;
-
 create table users (
-  id int8 not null,
-  archive boolean not null,
-  email varchar(255),
-  name varchar(255),
-  password varchar(255),
-  role varchar(255),
-  bucket_id int8,
-  primary key (id)
+id int8 not null,
+archive boolean not null,
+email varchar(255),
+name varchar(255),
+password varchar(255),
+role varchar(255),
+bucket_id int8,
+primary key (id)
 );
 -- BUCKET
 create sequence bucket_seq start 1 increment 1;
-
 create table buckets (
-  id int8 not null,
-  user_id int8,
-  primary key (id)
+id int8 not null,
+user_id int8,
+primary key (id)
 );
 
 -- LINK BETWEEN BUCKET AND USER
@@ -77,16 +75,15 @@ alter table if exists bucket_products
 
 -- ORDERS
 create sequence order_seq start 1 increment 1;
-
 create table orders (
-  id int8 not null,
-  address varchar(255),
-  changed timestamp,
-  created timestamp,
-  status varchar(255),
-  sum numeric(19, 2),
-  user_id int8,
-  primary key (id)
+id int8 not null,
+address varchar(255),
+created timestamp,
+order_status varchar(255),
+sum numeric(19, 2),
+updated timestamp,
+user_id int8,
+primary key (id)
 );
 
 alter table if exists orders
@@ -96,13 +93,19 @@ alter table if exists orders
 -- DETAILS OF ORDER
 create sequence order_details_seq start 1 increment 1;
 
-create table orders_details (
-  id int8 not null,
-  order_id int8 not null,
-  product_id int8 not null,
-  amount numeric(19, 2),
-  price numeric(19, 2),
-  primary key (id)
+create table order_details (
+id int8 not null,
+amount numeric(19, 2),
+price numeric(19, 2),
+order_id int8,
+product_id int8,
+primary key (id)
+);
+
+create table orders_order_details (
+order_id int8 not null,
+order_details_id
+int8 not null
 );
 
 alter table if exists orders_details
