@@ -2,7 +2,6 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-    show-sql: true
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:${DATABASE_PATH}
@@ -10,9 +9,6 @@ spring:
     password: ${DATABASE_PASSWORD}
   flyway:
     baseline-on-migrate: true
-  thymeleaf:
-    encoding: UTF-8
 server:
-    hostname: localhost
-    port: ${PORT:8080}
-
+  hostname: localhost
+  port: ${PORT:8080}

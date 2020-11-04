@@ -10,9 +10,7 @@
 	</parent>
 	<groupId>ru.gb.trishkin</groupId>
 	<artifactId>shop</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>shop</name>
-	<description>Demo project for Spring Boot</description>
+	<version>1.0-SNAPSHOT</version>
 
 	<properties>
 		<java.version>1.8</java.version>
@@ -97,19 +95,19 @@
 <!--			<artifactId>mysql-connector-java</artifactId>-->
 <!--			<scope>runtime</scope>-->
 <!--		</dependency>-->
-<!--		<dependency>-->
-<!--			<groupId>com.h2database</groupId>-->
-<!--			<artifactId>h2</artifactId>-->
-<!--			<version>1.4.200</version>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>42.2.16</version>
 		</dependency>
 		<dependency>
-			<groupId>org.flywaydb</groupId>
-			<artifactId>flyway-core</artifactId>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>1.4.200</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -161,6 +159,28 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>2.5</version>
+				<executions>
+					<execution>
+						<id>clean-jar-artifacts</id>
+						<phase>install</phase>
+						<goals><goal>clean</goal></goals>
+						<configuration>
+							<excludeDefaultDirectories>true</excludeDefaultDirectories>
+							<filesets>
+								<fileset>
+									<directory>target</directory>
+									<excludes>
+										<exclude>*.war</exclude>
+									</excludes>
+								</fileset>
+							</filesets>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

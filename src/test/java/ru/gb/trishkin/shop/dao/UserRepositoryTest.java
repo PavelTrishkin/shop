@@ -1,6 +1,7 @@
 package ru.gb.trishkin.shop.dao;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import ru.gb.trishkin.shop.domain.User;
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 @SqlGroup({@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:initUser.sql")})
+@Disabled
 public class UserRepositoryTest {
 
     @Autowired
