@@ -5,7 +5,7 @@ import org.springframework.context.annotation.ImportResource;
 import org.springframework.integration.channel.DirectChannel;
 
 @Configuration("sellIntegrationConfig")
-@ImportResource("/integration/http-sell-integration.xml")
+@ImportResource("classpath:/integration/http-sell-integration.xml")
 public class SellIntegrationConfig {
     private DirectChannel sellsChannel;
 

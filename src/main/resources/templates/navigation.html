@@ -21,45 +21,64 @@
                 </li>
                 <li class="nav-item" th:classappend="${activeTab == 'Market' ? 'active' : ''}">
                     <div class="dropdown" style="margin-left: 10px;">
-                        <button class="btn btn-outline-settcondary dropdown-toggle" th:text="Продукты" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" />
+                        <button class="btn btn-outline-settcondary dropdown-toggle" th:text="Продукты" type="button"
+                                id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false"></button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item"  th:href="@{'/products'}">Список продуктов</a>
-                            <a sec:authorize="hasAnyAuthority('ADMIN','MANAGER')" class="dropdown-item"  th:href="@{'/products/new'}">Добавить продукт</a>
+                            <a class="dropdown-item" th:href="@{'/products'}">Список продуктов</a>
+                            <a sec:authorize="hasAnyAuthority('ADMIN','MANAGER')" class="dropdown-item"
+                               th:href="@{'/products/new'}">Добавить продукт</a>
                         </div>
                     </div>
                 </li>
-                <li sec:authorize="hasAnyAuthority('ADMIN','MANAGER')" class="nav-item" th:classappend="${activeTab == 'Users' ? 'active' : ''}">
+                <li sec:authorize="hasAnyAuthority('ADMIN','MANAGER')" class="nav-item"
+                    th:classappend="${activeTab == 'Users' ? 'active' : ''}">
                     <div class="dropdown" style="margin-left: 10px;">
-                        <button class="btn btn-outline-settcondary dropdown-toggle" th:text="Пользователи" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" />
+                        <button class="btn btn-outline-settcondary dropdown-toggle" th:text="Пользователи" type="button"
+                                id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false"></button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item"  th:href="@{'/users'}">Список пользователей</a>
-                            <a sec:authorize="hasAuthority('ADMIN')" class="dropdown-item"  th:href="@{'/users/new'}">Добавить нового пользователя</a>
+                            <a class="dropdown-item" th:href="@{'/users'}">Список пользователей</a>
+                            <a sec:authorize="hasAuthority('ADMIN')" class="dropdown-item" th:href="@{'/users/new'}">Добавить
+                                нового пользователя</a>
                         </div>
                     </div>
                 </li>
-                <li sec:authorize="isAuthenticated()" class="nav-item" th:classappend="${activeTab == 'Bucket' ? 'active' : ''}">
+                <li sec:authorize="isAuthenticated()" class="nav-item"
+                    th:classappend="${activeTab == 'Bucket' ? 'active' : ''}">
                     <a class="nav-link" th:href="@{'/bucket'}" th:text="Корзина"></a>
                 </li>
-                <li style="margin-right: auto" sec:authorize="isAuthenticated()" class="nav-item" th:classappend="${activeTab == 'Profile' ? 'active' : ''}">
-                    <a class="nav-link" th:href="@{/users/profile}"><span sec:authentication="principal.username">Bob</span></a>
+                <li style="margin-right: auto" sec:authorize="isAuthenticated()" class="nav-item"
+                    th:classappend="${activeTab == 'Profile' ? 'active' : ''}">
+                    <a class="nav-link" th:href="@{/users/profile}"><span
+                            sec:authentication="principal.username">Bob</span></a>
                 </li>
                 <li sec:authorize="isAuthenticated()" class="nav-item">
                     <form th:align="right" th:action="@{/logout}" method="POST">
-                        <button id="navLogout" class="btn btn-outline-secondary" type="submit"  th:text="Выйти"></button>
+                        <button id="navLogout" class="btn btn-outline-secondary" type="submit" th:text="Выйти"></button>
                     </form>
                 </li>
 
-
                 <li sec:authorize="isAnonymous()" class="nav-item">
-                    <form class="align-middle" th:action="@{/auth}" method="post">
-                        <div class="input-group-prepend">
-                            <input id="navLoginField" class="form-control" type="text" th:placeholder="Логин" name="username"
-                                   aria-describedby="inputGroup-sizing-sm"style="margin-left: 10px;">
-                            <input id="navPasswordField" class="form-control" type="password" th:placeholder="Пароль" name="password"
-                                   aria-describedby="inputGroup-sizing-sm" style="margin-left: 10px;">
-                            <button id="navLoginSubmit" class="btn btn-outline-warning btn-sm" style="margin-left: 10px;" type="submit" th:text="Войти"></button>
-                        </div>
-                    </form>
+                    <div class="input-group-prepend">
+                        <form class="align-middle" th:action="@{/auth}" method="post">
+                            <div class="input-group-prepend">
+                                <input id="navLoginField" class="form-control" type="text" th:placeholder="Логин"
+                                       name="username"
+                                       aria-describedby="inputGroup-sizing-sm" style="margin-left: 10px;">
+                                <input id="navPasswordField" class="form-control" type="password"
+                                       th:placeholder="Пароль" name="password"
+                                       aria-describedby="inputGroup-sizing-sm" style="margin-left: 10px;">
+                                <button id="navLoginSubmit" class="btn btn-outline-warning btn-sm"
+                                        style="margin-left: 10px;" type="submit" th:text="Войти"></button>
+                            </div>
+                        </form>
+                        <form class="input-group-prepend" th:action="@{'users/reg'}" method="get">
+                            <button  id="navRegistrationSubmit"
+                                     class="btn btn-outline-warning btn-sm"
+                                     style="margin-left: 10px;" type="submit" th:text="Регистрация"></button>
+                        </form>
+                    </div>
                 </li>
             </ul>
         </div>

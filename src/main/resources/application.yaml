@@ -4,16 +4,15 @@ spring:
       ddl-auto: validate
     show-sql: true
   datasource:
-    url: jdbc:mysql://localhost:3306/shop_db?serverTimezone=UTC
-    username: root
-    password: root
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:${DATABASE_PATH}
+    username: ${DATABASE_USER}
+    password: ${DATABASE_PASSWORD}
   flyway:
     baseline-on-migrate: true
   thymeleaf:
     encoding: UTF-8
+server:
+    hostname: localhost
+    port: ${PORT:8080}
 
-  application:
-    name: shop
-  cloud:
-    config:
-      uri: http://localhost:8888
