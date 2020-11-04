@@ -19,6 +19,8 @@ public class UserController {
 
     private final UserService userService;
 
+    boolean exist = false;
+
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -46,6 +48,24 @@ public class UserController {
         else {
             model.addAttribute("user", dto);
             return "user";
+        }
+    }
+
+    @RequestMapping("/reg")
+    public String registration(Model model){
+        model.addAttribute("user", new UserDto());
+        return "registration";
+    }
+
+    @PostMapping(value = "/reg")
+    public String regNewUser(UserDto dto, Model model){
+        if(userService.save(dto)){
+            return "redirect:/users";
+        }
+        else {
+            dto.setExist(true);
+            model.addAttribute("user", dto);
+            return "registration";
         }
     }
 

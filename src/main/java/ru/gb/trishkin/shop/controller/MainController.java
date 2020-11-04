@@ -2,7 +2,10 @@ package ru.gb.trishkin.shop.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ru.gb.trishkin.shop.dto.ProductDto;
+import ru.gb.trishkin.shop.dto.UserDto;
 import ru.gb.trishkin.shop.service.SessionObjectHolder;
 
 import javax.servlet.http.HttpSession;
